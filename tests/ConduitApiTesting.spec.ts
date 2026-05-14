@@ -1,5 +1,6 @@
-import { expect } from "@playwright/test";
+import { expect } from "../Utils/custom-expect";
 import { test } from "../Utils/Fiextures";
+
 
 let authToken: string
 
@@ -20,8 +21,8 @@ test('Get articles test', async ({ api }) => {
         .params({ limit: 10, offset: 0 })
         .getRequest(200)
 
-    expect(response.articles.length).toBeLessThanOrEqual(10)
-    expect(response.articlesCount).toEqual(10)
+    expect(response.articles.length).shouldBeLessThanOrEqual(10)
+    expect(response.articlesCount).shouldEqual(10)
 
 });
 
@@ -30,8 +31,8 @@ test('Get tags test', async ({ api }) => {
         .path('/tags')
         .getRequest(200)
 
-    expect(response.tags[2]).toBe('Git')
-    expect(response.tags.length).toBeLessThanOrEqual(10)
+    expect(response.tags[2]).shouldEqual('Git')
+    expect(response.tags.length).shouldBeLessThanOrEqual(10)
 
 });
 
@@ -50,7 +51,7 @@ test('Create, Update and Delete an article test', async ({ api }) => {
         })
         .postRequest(201)
     const slugId = createArticleResponse.article.slug
-    expect(createArticleResponse.article.title).toEqual('TestTwo')
+    expect(createArticleResponse.article.title).shouldEqual('TestTwo')
 
     //update an existing article
     const updateRequestRespone = await api
@@ -67,8 +68,8 @@ test('Create, Update and Delete an article test', async ({ api }) => {
         })
         .putRequest(200)
     const modifiedSlugId = updateRequestRespone.article.slug
-    expect(updateRequestRespone.article.title).toEqual('Test title modified')
-    expect(updateRequestRespone.article.author.username).toEqual("sathishkumpwapi")
+    expect(updateRequestRespone.article.title).shouldEqual('Test title modified')
+    expect(updateRequestRespone.article.author.username).shouldEqual("sathishkumpwapi")
 
     //Delete an existing article
     const deleteRequestResponse = await api
@@ -82,9 +83,9 @@ test('Create, Update and Delete an article test', async ({ api }) => {
         .params({ limit: 10, offset: 0 })
         .getRequest(200)
       
-    expect(response.articles.title).not.toEqual('Test title modified')
-    expect(response.articles.title).not.toEqual('TestTwo')
-    expect(response.articles.length).toBeLessThanOrEqual(10)
-    expect(response.articlesCount).toEqual(10)
+    expect(response.articles.title).not.shouldEqual('Test title modified')
+    expect(response.articles.title).not.shouldEqual('TestTwo')
+    expect(response.articles.length).shouldBeLessThanOrEqual(10)
+    expect(response.articlesCount).shouldEqual(10)
 
 });

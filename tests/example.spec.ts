@@ -18,9 +18,9 @@ test('Get Tags test', async ({ request }) => {
   const response = await request.get("https://conduit-api.bondaracademy.com/api/tags")
   const responseJson = await response.json()
   expect(response.status()).toBe(200)
-  expect(response.status()).toEqual(200)
+  expect(response.status()).shouldEqual(200)
   expect(responseJson.tags[2]).toBe('Git')
-  expect(responseJson.tags.length).toBeLessThanOrEqual(10)
+  expect(responseJson.tags.length).shouldBeLessThanOrEqualOrEqual(10)
   //console.log(responseJson)
 });
 
@@ -28,7 +28,7 @@ test('Get all articles', async ({ request }) => {
   const response = await request.get("https://conduit-api.bondaracademy.com/api/articles?limit=10&offset=0")
   const responseJson = await response.json()
   expect(response.status()).toBe(200)
-  expect(responseJson.articles.length).toBeLessThanOrEqual(10)
+  expect(responseJson.articles.length).shouldBeLessThanOrEqualOrEqual(10)
   //console.log(responseJson)
 });
 
@@ -63,7 +63,7 @@ test('Create , update and delete an article', async ({ request }) => {
   const responseJson = await response.json()
   const slugId = responseJson.article.slug
   expect(response.status()).toBe(201)
-  expect(responseJson.article.title).toEqual('TestTwo')
+  expect(responseJson.article.title).shouldEqual('TestTwo')
   //console.log(responseJson)
 
   //get articles
@@ -74,7 +74,7 @@ test('Create , update and delete an article', async ({ request }) => {
   })
   const responJson = await respon.json()
   expect(respon.status()).toBe(200)
-  expect(responJson.articles.length).toBeLessThanOrEqual(10)
+  expect(responJson.articles.length).shouldBeLessThanOrEqualOrEqual(10)
   expect(responJson.articles[0].title).toBe('TestTwo')
 
   //update an article
@@ -96,7 +96,7 @@ test('Create , update and delete an article', async ({ request }) => {
   const modifiedSlugId = reJson.article.slug
   //console.log(reJson)
   expect(respon.status()).toBe(200)
-  expect(reJson.article.author.username).toEqual("sathishkumpwapi")
+  expect(reJson.article.author.username).shouldEqual("sathishkumpwapi")
 
   //Delete articles
   const res = await request.delete(`https://conduit-api.bondaracademy.com/api/articles/${modifiedSlugId}`, {
