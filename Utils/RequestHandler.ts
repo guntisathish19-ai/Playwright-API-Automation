@@ -3,7 +3,7 @@ import { APILogger } from "./logger"
 
 export class RequestHandler{
     private request: APIRequestContext
-    private baseUrl!: string
+    private baseUrl!: string | undefined
     private defaultBaseUrl: string = ''
     private apiPath: string = ''
     private queryParams: object = {}
@@ -47,6 +47,7 @@ export class RequestHandler{
         const url = this.getUrl()
         this.logger.logRequest('GET', url, this.apiHeaders, this.apiBody) //request loggers
         const response = await this.request.get(url, {headers: this.apiHeaders})
+        this.cleanupFields() //to reset all fields after a curd function
         const responseStatus = response.status() //responseStatus = statuscode
         const responseJson = await response.json()
         this.logger.logResponse(responseStatus, responseJson) //response loggers
@@ -61,6 +62,7 @@ export class RequestHandler{
                 headers: this.apiHeaders,
                 data: this.apiBody
             })
+        this.cleanupFields()
         const responseStatus = response.status() //responseStatus = statuscode
         const responseJson = await response.json()
         this.logger.logResponse(responseStatus, responseJson) //response loggers
@@ -75,7 +77,7 @@ export class RequestHandler{
                 headers: this.apiHeaders,
                 data: this.apiBody
             })
-        console
+        this.cleanupFields()
         const responseStatus = response.status() //responseStatus = statuscode
         const responseJson = await response.json()
         this.logger.logResponse(responseStatus, responseJson) //response loggers
@@ -89,6 +91,7 @@ export class RequestHandler{
         const response = await  this.request.delete(url, {
                 headers: this.apiHeaders,
             })
+        this.cleanupFields()
         const responseStatus = response.status() //responseStatus = statuscode
         this.logger.logResponse(responseStatus) //response loggers
         this.statusCodeValidator(responseStatus, statusCode, this.deleteRequest) // = expect(response.status()).shouldEqual(statusCode)
@@ -113,5 +116,14 @@ export class RequestHandler{
             Error.captureStackTrace(error, callingMethod)
             throw error
         }
+    }
+
+    private cleanupFields(){
+        this.apiBody = {}
+        this.apiHeaders = {}
+        this.baseUrl = undefined
+        this.queryParams = {}
+        this.apiPath = ''
+
     }
 }
